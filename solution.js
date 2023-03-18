@@ -13,6 +13,10 @@ class Tree {
   Insert(value) {}
 }
 
+function removeDuplicates(arr) {
+  return arr.filter((item, index) => arr.indexOf(item) === index);
+}
+
 function buildTree(arr, start = 0, end = arr.length - 1) {
   // Sort array
   arr.sort();
