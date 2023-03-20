@@ -99,24 +99,46 @@ class Tree {
       this.find(key, root.left);
     } else console.log(root);
   }
-  levelOrder(givenFunction = null, queue = [this.root], arr = []) {
+  levelOrder(queue = [this.root], arr = []) {
     let root = queue[0];
 
     if (root.left) queue.push(root.left);
 
     if (root.right) queue.push(root.right);
 
-    // if a function was given, use queue items as arguments
-    if (givenFunction) givenFunction(root);
-
     arr.push(root.data);
     queue.shift();
 
     if (queue.length == 0) {
-      if (!givenFunction) console.log(arr);
+      console.log(arr);
       return;
     } else {
-      this.levelOrder(null, queue, arr);
+      this.levelOrder(queue, arr);
     }
+  }
+  preorder(root = this.root, arr = []) {
+    if (root == null) return;
+
+    arr.push(root.data);
+    this.preorder(root.left, arr);
+    this.preorder(root.right, arr);
+    return arr;
+  }
+  inorder(root = this.root, arr = []) {
+    if (root == null) return;
+
+    this.inorder(root.left, arr);
+    arr.push(root.data);
+    this.inorder(root.right, arr);
+
+    return arr;
+  }
+  postorder(root = this.root, arr = []) {
+    if (root == null) return;
+
+    this.postorder(root.left, arr);
+    this.postorder(root.right, arr);
+    arr.push(root.data);
+    return arr;
   }
 }
