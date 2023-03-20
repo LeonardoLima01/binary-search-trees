@@ -141,4 +141,31 @@ class Tree {
     arr.push(root.data);
     return arr;
   }
+  height(root = this.root) {
+    if (root == null) {
+      return -1;
+    }
+    let leftHeight = this.height(root.left);
+    let rightHeight = this.height(root.right);
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+  depth(node = null, root = this.root, depth = 0) {
+    if (root == null || node == null) return;
+
+    if (node > root.data) this.depth(node, root.right, (depth += 1));
+    else if (node < root.data) this.depth(node, root.left, (depth += 1));
+    else console.log(depth);
+  }
+  isBalanced(root = this.root) {
+    let leftHeight = this.height(root.left);
+    let rightHeight = this.height(root.right);
+    let difference = Math.abs(leftHeight - rightHeight);
+
+    return difference <= 2 ? true : false;
+  }
+  rebalance() {
+    if (this.root == null) return;
+    let sorted = this.inorder();
+    this.root = this.buildTree(sorted);
+  }
 }
