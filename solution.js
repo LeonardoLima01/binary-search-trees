@@ -102,19 +102,15 @@ class Tree {
   levelOrder(queue = [this.root], arr = []) {
     let root = queue[0];
 
-    if (root.left) queue.push(root.left);
+    if (!root) return;
 
+    if (root.left) queue.push(root.left);
     if (root.right) queue.push(root.right);
 
     arr.push(root.data);
     queue.shift();
-
-    if (queue.length == 0) {
-      console.log(arr);
-      return;
-    } else {
-      this.levelOrder(queue, arr);
-    }
+    this.levelOrder(queue, arr);
+    return arr;
   }
   preorder(root = this.root, arr = []) {
     if (root == null) return;
@@ -161,7 +157,7 @@ class Tree {
     let rightHeight = this.height(root.right);
     let difference = Math.abs(leftHeight - rightHeight);
 
-    return difference <= 2 ? true : false;
+    return difference < 2 ? true : false;
   }
   rebalance() {
     if (this.root == null) return;
@@ -169,3 +165,5 @@ class Tree {
     this.root = this.buildTree(sorted);
   }
 }
+
+module.exports = Tree;
