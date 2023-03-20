@@ -35,7 +35,7 @@ class Tree {
     return rootNode;
   }
 
-  Insert(value) {
+  insert(value) {
     let currentNode = this.root;
     let newNode = new Node(value);
 
@@ -57,69 +57,66 @@ class Tree {
       }
     }
   }
-  Delete(value) {
-    let currentNode = this.root;
-    let previousNode;
+  delete(key, root = this.root) {
+    if (root == null) {
+      return root;
+    }
 
-    while (currentNode) {
-      if (currentNode.data != value) {
-        // Set node before node with given value
-        if (currentNode.left) {
-          if (currentNode.left.data == value) {
-            previousNode = currentNode;
-          }
-        }
-        if (currentNode.right) {
-          if (currentNode.right.data == value) {
-            previousNode = currentNode;
-          }
-        }
+    if (key < root.data) root.left = this.delete(key, root.left);
+    else if (key > root.data) root.right = this.delete(key, root.right);
+    else {
+      // if node is a leaf
+      if (!root.left && !root.right) return null;
+      else if (root.right == null) return root.left;
+      else if (root.left == null) return root.right;
+      else {
+        let closestNode = root.right;
 
-        // Set current node
-        currentNode =
-          value < currentNode.data ? currentNode.left : currentNode.right;
-      } else {
-        // If node is a leaf (no links)
-        if (currentNode.left == null && currentNode.right == null) {
-          value > previousNode.data
-            ? (previousNode.right = null)
-            : (previousNode.left = null);
-          break;
-        }
-        // If node has only 1 link
-        else if (currentNode.left == null || currentNode.right == null) {
-          if (currentNode.left) {
-            previousNode.left == currentNode
-              ? (previousNode.left = currentNode.left)
-              : (previousNode.right = currentNode.left);
-            break;
-          } else {
-            previousNode.left == currentNode
-              ? (previousNode.left = currentNode.right)
-              : (previousNode.right = currentNode.right);
-            break;
-          }
-        }
-        // If node has 2 links
-        else {
-          // Get closest number below the one being removed (9 is the closest to 10)
-          let closestNode = currentNode.right;
+        while (closestNode.left != null) closestNode = closestNode.left;
 
-          while (closestNode.left != null) {
-            previousNode = closestNode;
-            closestNode = closestNode.left;
-          }
-
-          console.log("PREVVV: ", previousNode);
-          console.log("CURRRR: ", currentNode);
-          console.log("CLOSSS: ", closestNode);
-
-          previousNode.left = closestNode.right;
-          currentNode.data = closestNode.data;
-          break;
-        }
-        break;
+        root.data = closestNode.data;
+        root.right = this.delete(root.data, root.right);
       }
+    }
+    return root;
+  }
+  find(key, root = this.root) {
+    if (!key) {
+      return;
+    }
+
+    if (key > root.data) {
+      if (!root.right) {
+        console.log("Not in the tree");
+        return;
+      }
+      this.find(key, root.right);
+    } else if (key < root.data) {
+      if (!root.left) {
+        console.log("Not in the tree");
+        return;
+      }
+      this.find(key, root.left);
+    } else console.log(root);
+  }
+  levelOrder(givenFunction = null, queue = [this.root], arr = []) {
+    let root = queue[0];
+
+    if (root.left) queue.push(root.left);
+
+    if (root.right) queue.push(root.right);
+
+    // if a function was given, use queue items as arguments
+    if (givenFunction) givenFunction(root);
+
+    arr.push(root.data);
+    queue.shift();
+
+    if (queue.length == 0) {
+      if (!givenFunction) console.log(arr);
+      return;
+    } else {
+      this.levelOrder(null, queue, arr);
     }
   }
 }
