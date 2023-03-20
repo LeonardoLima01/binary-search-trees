@@ -16,7 +16,7 @@ class Tree {
   }
   buildTree(arr, start = 0, end = arr.length - 1) {
     // Sort array
-    arr.sort();
+    arr.sort((a, b) => a - b);
 
     // Remove duplicates
     removeDuplicates(arr);
@@ -55,7 +55,71 @@ class Tree {
           currentNode = currentNode.right;
         }
       }
-      console.log(currentNode);
+    }
+  }
+  Delete(value) {
+    let currentNode = this.root;
+    let previousNode;
+
+    while (currentNode) {
+      if (currentNode.data != value) {
+        // Set node before node with given value
+        if (currentNode.left) {
+          if (currentNode.left.data == value) {
+            previousNode = currentNode;
+          }
+        }
+        if (currentNode.right) {
+          if (currentNode.right.data == value) {
+            previousNode = currentNode;
+          }
+        }
+
+        // Set current node
+        currentNode =
+          value < currentNode.data ? currentNode.left : currentNode.right;
+      } else {
+        // If node is a leaf (no links)
+        if (currentNode.left == null && currentNode.right == null) {
+          value > previousNode.data
+            ? (previousNode.right = null)
+            : (previousNode.left = null);
+          break;
+        }
+        // If node has only 1 link
+        else if (currentNode.left == null || currentNode.right == null) {
+          if (currentNode.left) {
+            previousNode.left == currentNode
+              ? (previousNode.left = currentNode.left)
+              : (previousNode.right = currentNode.left);
+            break;
+          } else {
+            previousNode.left == currentNode
+              ? (previousNode.left = currentNode.right)
+              : (previousNode.right = currentNode.right);
+            break;
+          }
+        }
+        // If node has 2 links
+        else {
+          // Get closest number below the one being removed (9 is the closest to 10)
+          let closestNode = currentNode.right;
+
+          while (closestNode.left != null) {
+            previousNode = closestNode;
+            closestNode = closestNode.left;
+          }
+
+          console.log("PREVVV: ", previousNode);
+          console.log("CURRRR: ", currentNode);
+          console.log("CLOSSS: ", closestNode);
+
+          previousNode.left = closestNode.right;
+          currentNode.data = closestNode.data;
+          break;
+        }
+        break;
+      }
     }
   }
 }
